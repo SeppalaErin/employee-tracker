@@ -314,3 +314,209 @@ const updateManager = () => {
   })
 };
 
+// Delete Functions
+
+const deleteDepartment = () => {
+  connection.query('SELECT * FROM department', (err, results) => {
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          name: 'choice',
+          type: 'rawlist',
+          choices() {
+            const choicesArray = [];
+            results.forEach(({
+              department_name
+            }) => {
+              choicesArray.push(department_name)
+            });
+            return choicesArray;
+          },
+          message: "Which department do you want to delete?"
+        }
+      ])
+      .then((answer) => {
+        let chosenDepartment;
+        results.forEach((department) => {
+          if (department.department_name === answer.choice) {
+            chosenDepartment = department.department_name;
+          };
+        });
+        
+        connection.query(
+          'DELETE FROM department WHERE ?', 
+          {
+            department_name: chosenDepartment
+          },
+          (err) => {
+            if (err) throw err;
+            console.log("Your department was deleted successfully")
+            start();
+          }
+        );
+      });
+  });
+};
+
+const deleteRole = () => {
+  connection.query('SELECT * FROM role', (err, results) => {
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          name: 'choice',
+          type: 'rawlist',
+          choices() {
+            const choicesArray = [];
+            results.forEach(({
+              title
+            }) => {
+              choicesArray.push(title)
+            });
+            return choicesArray;
+          },
+          message: "Which role do you want to delete?"
+        }
+      ])
+      .then((answer) => {
+        let chosenRole;
+        results.forEach((role) => {
+          if (role.title === answer.choice) {
+            chosenRole = role.title;
+          };
+        })
+        
+        connection.query(
+          'DELETE FROM role WHERE ?', 
+          {
+            title: chosenRole
+          },
+          (err) => {
+            if (err) throw err;
+            console.log("Your role was deleted successfully")
+            start();
+          }
+        );
+      });
+  });
+};
+
+const deleteEmployee = () => {
+  connection.query('SELECT * FROM employee', (err, results) => {
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          name: 'choice',
+          type: 'rawlist',
+          choices() {
+            const choicesArray = [];
+            results.forEach(({
+              last_name
+            }) => {
+              choicesArray.push(last_name)
+            });
+            return choicesArray;
+          },
+          message: "Which employee do you want to delete?"
+        }
+      ])
+      .then((answer) => {
+        let chosenEmployee;
+        results.forEach((employee) => {
+          if (employee.last_name === answer.choice) {
+            chosenEmployee = employee.last_name;
+          };
+        });
+        
+        connection.query(
+          'DELETE FROM employee WHERE ?', 
+          {
+            last_name: chosenEmployee
+          },
+          (err) => {
+            if (err) throw err;
+            console.log(`${chosenEmployee} was deleted successfully`)
+            start();
+          }
+        );
+      });
+  });
+};
+
+// 
+
+const findTotalBudget = () => {
+  console.log("Work In Progress");
+  
+}
+
+// Function to exit out of the application
+
+const quit = () => {
+  console.log("Thank you for using this program! Goodbye.");
+  connection.end();
+}
+
+// On start begin application
+
+const start = () => {
+  inquirer
+    .prompt({
+      name: "firstChoice",
+      type: 'rawlist',
+      message: "What would you like to do?",
+      choices: [
+        'View all departments',
+        'View all roles',
+        'View all employees',
+        'Add a department',
+        'Add a role',
+        'Add an employee',
+        "Update an employee's role",
+        "Update an employee's manager",
+        'Delete a department',
+        'Delete a role',
+        'Delete an employee',
+        // 'View a total utilized budget of a department',
+        'I am done for now'
+      ]
+    })
+    .then((answer) => {
+      if (answer.firstChoice === 'Add a department') {
+        addDepartment();
+      } else if (answer.firstChoice === 'View all departments') {
+        viewDepartments();
+      } else if (answer.firstChoice === 'View all roles') {
+        viewRoles();
+      } else if (answer.firstChoice === 'View all employees') {
+        viewEmployees();
+      } else if (answer.firstChoice === 'Add a role') {
+        addRole();
+      } else if (answer.firstChoice === 'Add an employee') {
+        addEmployee();
+      } else if (answer.firstChoice === "Update an employee's role") {
+        updateRole();
+      } else if (answer.firstChoice === "Update an employee's manager") {
+        updateManager();
+      } else if (answer.firstChoice === "Delete a department") {
+        deleteDepartment();
+      } else if (answer.firstChoice === "Delete a role") {
+        deleteRole();
+      } else if (answer.firstChoice === "Delete an employee") {
+        deleteEmployee();
+      } else if (answer.firstChoice === "View a total utilized budget of a department") {
+        findTotalBudget();
+      } else {
+        quit();
+      }
+    });
+};
+
+// connect to the mysql server and sql database
+connection.connect((err) => {
+  if (err) throw err;
+  // run the start function after the connection is made to prompt the user
+  start();
+});
