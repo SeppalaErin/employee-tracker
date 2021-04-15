@@ -1,0 +1,25 @@
+{
+    "name": "employee-tracker",
+    "version": "1.0.0",
+    "description": "Database management for your company",
+    "main": "app.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "node server.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/aseppala98/employee-tracker.git"
+    },
+    "author": "Erin Seppala",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/aseppala98/employee-tracker/issues"
+    },
+    "homepage": "https://github.com/aseppala98/employee-tracker#readme",
+    "dependencies": {
+      "console.table": "^0.10.0",
+      "inquirer": "^8.0.0",
+      "mysql": "^2.18.1"
+    }
+  }
